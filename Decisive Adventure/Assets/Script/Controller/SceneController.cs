@@ -75,7 +75,7 @@ public class SceneController : MonoBehaviour {
 
 	void CheckpointReached(){
 		if(gameState != GameState.Move){
-			Debug.Log("ERROR: GameState was not Move");
+			Debug.Log("ERROR: GameState was not Move. It was " + gameState);
 			return;
 		}
 		rigidBody2D.velocity = Vector3.zero;

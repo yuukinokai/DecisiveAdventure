@@ -37,7 +37,7 @@ public class DialogueController : MonoBehaviour
 
     static public DialogueController GetController(){
         if(thisInstance == null){
-           Debug.Log("Error : No instance of Controller.");
+          // Debug.Log("Error : No instance of Controller.");
         }
         return thisInstance;
     }
@@ -45,7 +45,7 @@ public class DialogueController : MonoBehaviour
     void Awake(){
         thisInstance = this;
         instanceNumber++;
-        Debug.Log("Set Controller");
+       // Debug.Log("Set Controller");
     }
     //initialize
     void Start()
@@ -57,7 +57,7 @@ public class DialogueController : MonoBehaviour
         }
         continueButton.SetActive(false);
         dialogIndex = 0;
-        Debug.Log("DIALOG CONTOLLER: State Wait");
+        //Debug.Log("DIALOG CONTOLLER: State Wait");
         currentState = State.Wait;
         if(dialog.Length == 0) return;
         currentDialogue = dialog[0];        
@@ -70,7 +70,7 @@ public class DialogueController : MonoBehaviour
             && textDisplay.text == currentDialogue.sentences[sentenceIndex])
         {
             continueButton.SetActive(true);
-            //Debug.Log("DIALOG CONTOLLER: Continue active");
+            Debug.Log("DIALOG CONTOLLER: Continue active");
         }
         //Debug.Log("DIALOG INDEX " + dialogIndex);
 
@@ -95,7 +95,7 @@ public class DialogueController : MonoBehaviour
     /// </summary>
     public void NextDialog()
     {
-        Debug.Log("DIALOG CONTOLLER: State Dialog");
+        //Debug.Log("DIALOG CONTOLLER: State Dialog");
         currentState = State.Dialog;
         if(dialogIndex < dialog.Length)
         {
@@ -116,8 +116,9 @@ public class DialogueController : MonoBehaviour
     /// </summary>
     public void DisplayChoices()
     {
-        Debug.Log("DIALOG CONTOLLER: State Choice");
+        //Debug.Log("DIALOG CONTOLLER: State Choice");
         currentState = State.Choice;
+        continueButton.SetActive(false);
         
         int buttonIndex = 0;
         foreach(string choice in currentDialogue.choices)
@@ -138,7 +139,7 @@ public class DialogueController : MonoBehaviour
         {
             button.SetActive(false);                      //turn buttons off
         }
-        Debug.Log("DIALOG CONTOLLER: State Response");
+        //Debug.Log("DIALOG CONTOLLER: State Response");
         currentState = State.Response;
         textDisplay.text = "";
 
@@ -164,7 +165,7 @@ public class DialogueController : MonoBehaviour
            NextDialog();
         }
         else{
-            Debug.Log("DIALOG CONTOLLER: State Wait");
+            //Debug.Log("DIALOG CONTOLLER: State Wait");
             EventManager.TriggerEvent ("Done Dialog");
             currentState = State.Wait;
         }
@@ -228,7 +229,7 @@ public class DialogueController : MonoBehaviour
 
     public void OverrideDialog(Dialog d){
         dialog[dialogIndex] = d;
-        Debug.Log("Replaced Dialog");
+        Debug.Log("DIALOG CONTROLLER : Replaced Dialog");
     }
 
 }
