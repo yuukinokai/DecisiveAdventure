@@ -6,13 +6,14 @@ using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour {
 
 	enum GameState { Intro, Dialog, Move, EOD, Transition, Done, GameOver, Checkpoint};
+	[Range(0, .3f)] [SerializeField] private float MovementSmoothing = .05f; 
 	[SerializeField] private GameObject[] checkpoints;
 	[SerializeField] private DialogueController dialogController;
-	[Range(0, .3f)] [SerializeField] private float MovementSmoothing = .05f; 
 	[SerializeField] private float moveSpeed = 5f;
 	[SerializeField] private Animator transitionAnim;
 	[SerializeField] private string sceneName;
 	[SerializeField] private string gameOverSceneName = "gameOver";
+	[SerializeField] private UIController uiController;
 
 	private GameState gameState;
 	private int checkpointIndex = 0;
@@ -26,6 +27,12 @@ public class SceneController : MonoBehaviour {
 		transitionAnim.SetTrigger("GameOver");
 		yield return new WaitForSeconds(2f);
 		SceneManager.LoadScene(gameOverSceneName);
+	}
+
+	IEnumerator EOD()
+	{
+		yield return new WaitForSeconds(2f);
+		gameState = GameState.EOD;
 	}
 
 	IEnumerator Intro()
@@ -79,7 +86,7 @@ public class SceneController : MonoBehaviour {
 			return;
 		}
 		rigidBody2D.velocity = Vector3.zero;
-		Debug.Log("Checkpoint reached");
+		//Debug.Log("Checkpoint reached");
 		gameState = GameState.Checkpoint;
 	}
 
@@ -98,12 +105,9 @@ public class SceneController : MonoBehaviour {
 			Debug.Log("ERROR: GameState was not Dialog");
 			return;
 		}
-		Debug.Log ("Dialog is done");
+		//Debug.Log ("Dialog is done");
 		if(checkpoints.Length == 0){
 			gameState = GameState.Transition;
-		}
-		else if(checkpointIndex == checkpoints.Length){
-			gameState = GameState.EOD;
 		}
 		else{
 			gameState = GameState.Move;
@@ -122,6 +126,22 @@ public class SceneController : MonoBehaviour {
 			Vector3 targetVelocity = new Vector2(moveSpeed * 10f, rigidBody2D.velocity.y);
 			// And then smoothing it out and applying it to the character
 			rigidBody2D.velocity = Vector3.SmoothDamp(rigidBody2D.velocity, targetVelocity, ref _Velocity, MovementSmoothing);
+
+			if(checkpointIndex == checkpoints.Length){
+				StartCoroutine(EOD());
+			}
 		}
+
+		if(gameState == GameState.EOD){
+			Debug.Log("Calling EOD");
+			uiController.DisplayInventory();
+		}
+		else{
+			uiController.HideInventory();
+		}
+	}
+
+	public void EndDay(){
+		gameState = GameState.Transition;
 	}
 }

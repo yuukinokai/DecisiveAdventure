@@ -5,13 +5,17 @@ using UnityEngine;
 public class CheckDirection : Checkpoint {
 
 	private bool leave = false;
-	override protected void Event3(){
-		base.Event3();
-		EventManager.TriggerEvent ("GameOver");
-		Vector3 theScale = rigidBody2D.transform.localScale;
-		theScale.x *= -1;
-		rigidBody2D.transform.localScale = theScale;
-		leave = true;
+	
+	override protected void Event2(){
+		
+		if(isActive){
+			EventManager.TriggerEvent ("GameOver");
+			Vector3 theScale = rigidBody2D.transform.localScale;
+			theScale.x *= -1;
+			rigidBody2D.transform.localScale = theScale;
+			leave = true;
+			base.Event2();
+		}
 	} 
 
 	void Update(){

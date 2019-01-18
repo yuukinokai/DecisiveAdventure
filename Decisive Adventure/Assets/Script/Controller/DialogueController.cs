@@ -70,7 +70,7 @@ public class DialogueController : MonoBehaviour
             && textDisplay.text == currentDialogue.sentences[sentenceIndex])
         {
             continueButton.SetActive(true);
-            Debug.Log("DIALOG CONTOLLER: Continue active");
+            //Debug.Log("DIALOG CONTOLLER: Continue active");
         }
         //Debug.Log("DIALOG INDEX " + dialogIndex);
 

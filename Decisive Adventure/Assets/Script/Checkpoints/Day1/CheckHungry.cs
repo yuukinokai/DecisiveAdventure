@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class CheckHungry : Checkpoint {
 
-	[SerializeField] private bool overriden = false;
-
 	override protected bool ShouldReplace(){
 		if(hero == null){
 			Debug.Log("No Hero");
@@ -18,10 +16,10 @@ public class CheckHungry : Checkpoint {
 		return false;
 	}
 
-	override protected void Event1(){
+	override protected void Event0(){
 		if(overriden == true && isActive){
 			hero.RemoveItem("Banana");
-			base.Event1();
+			base.Event0();
 		}
 	} 
 }

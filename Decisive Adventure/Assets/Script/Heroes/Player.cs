@@ -40,6 +40,7 @@ public class Player : Hero {
 	public bool RemoveItem(string itemName){
 		if(inventory == null) return false;
 		int amount;
+		Debug.Log("RemoveItem : " +  itemName);
 		if(inventory.TryGetValue(itemName, out amount)){
             amount--;
 			inventory.Remove(itemName);
@@ -63,5 +64,10 @@ public class Player : Hero {
 			return true;
         }
 		return false;
+	}
+
+	public List<string> GetInventory(){
+		if(inventory == null) return null;
+		return new List<string>(this.inventory.Keys);
 	}
 }

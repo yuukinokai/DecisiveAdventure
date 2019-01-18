@@ -14,7 +14,7 @@ public class Cameraflow : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		target = GameObject.Find("Player").transform;
+		target = GameObject.FindGameObjectWithTag("Player").transform;
 	}
 	
 	// Update is called once per frame
@@ -22,6 +22,7 @@ public class Cameraflow : MonoBehaviour {
 	{
 		if(target != null){
 			transform.position = new Vector3(Mathf.Clamp(target.position.x, minX, maxX), Mathf.Clamp(target.position.y, minY, maxY), transform.position.z);
+			//Debug.Log(target.position.x);
 		}
 	}
 }
