@@ -9,4 +9,5 @@ public class Dialog : MonoBehaviour {
     public Dialog[] responses;
     public bool repeat;
     public bool startRightAway;
+    public bool isGiveOrSell;
 }

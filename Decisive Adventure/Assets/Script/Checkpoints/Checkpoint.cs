@@ -41,7 +41,7 @@ public class Checkpoint : MonoBehaviour {
 		if(hero == null) Debug.Log("Hero Not Set");
 	}
 
-    protected void OnEnable ()
+    virtual protected void OnEnable ()
     {
         EventManager.StartListening ("Button0", Event0);
 		EventManager.StartListening ("Button1", Event1);

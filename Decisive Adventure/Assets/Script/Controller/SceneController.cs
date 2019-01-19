@@ -2,10 +2,11 @@
 using UnityEngine.Events;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System;
 
 public class SceneController : MonoBehaviour {
 
-	enum GameState { Intro, Dialog, Move, EOD, Transition, Done, GameOver, Checkpoint};
+	enum GameState { Intro, Dialog, Move, EOD, Transition, Done, GameOver, Checkpoint, Giving, Selling};
 	[Range(0, .3f)] [SerializeField] private float MovementSmoothing = .05f; 
 	[SerializeField] private GameObject[] checkpoints;
 	[SerializeField] private DialogueController dialogController;
@@ -73,9 +74,29 @@ public class SceneController : MonoBehaviour {
 		EventManager.StartListening("Checkpoint", CheckpointReached);
 		EventManager.StartListening("GameOver", GameOver);
 		EventManager.StartListening("DoneCheckpoint", DoneCheckpoint);
+        EventManager.StartListening("Giving", Giving);
+        EventManager.StartListening("DoneGiving", DoneGiving);
+        EventManager.StartListening("MonkeyJoin", NotifyMonkey);
     }
 
-	void GameOver(){
+    private void NotifyMonkey()
+    {
+        dialogController.Notice("You gave the monkey your banana and Monkey joined you!");
+    }
+
+    private void DoneGiving()
+    {
+        gameState = GameState.Dialog;
+        dialogController.NextSentence();
+    }
+
+    private void Giving()
+    {
+        gameState = GameState.Giving;
+        uiController.DisplayGive();
+    }
+
+    void GameOver(){
 		gameState = GameState.GameOver;
 		StartCoroutine(GOver());
 	}

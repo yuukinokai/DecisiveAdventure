@@ -51,6 +51,9 @@ TagManager:
   - name: Tile
     uniqueID: 3163348903
     locked: 0
+  - name: ForeForeground
+    uniqueID: 76193057
+    locked: 0
   - name: NPC
     uniqueID: 718839611
     locked: 0

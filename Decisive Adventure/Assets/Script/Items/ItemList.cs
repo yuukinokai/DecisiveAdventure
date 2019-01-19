@@ -5,6 +5,7 @@ using UnityEngine;
 public class ItemList : MonoBehaviour
 {
     public BaseItem[] itemList = new BaseItem[20];
+    public BaseItem[] heroList = new BaseItem[5];
 
     static private ItemList itemListInstance;
 

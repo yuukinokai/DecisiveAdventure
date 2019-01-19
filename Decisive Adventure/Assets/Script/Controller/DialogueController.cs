@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DialogueController : MonoBehaviour
 {
-    enum State { Dialog, Choice, Response, Wait };
+    enum State { Dialog, Choice, Response, Wait , Giving, Notice};
 
     static private DialogueController thisInstance = null;
     static private int instanceNumber = 0;
@@ -16,7 +16,8 @@ public class DialogueController : MonoBehaviour
     [SerializeField] private Text[] choiceDisplay;              //array of text display for choices
     [SerializeField] private GameObject[] choiceButtons;        //array of buttons for choices
 
-    
+    private State oldState;
+    private string noticeMessage = "";
     private State currentState;               //current state machine for dialog
     private int dialogIndex = 0;              //index of the scene dialog
     private int sentenceIndex = 0;            //index of sentence within dialog
@@ -59,6 +60,7 @@ public class DialogueController : MonoBehaviour
         dialogIndex = 0;
         //Debug.Log("DIALOG CONTOLLER: State Wait");
         currentState = State.Wait;
+        oldState = State.Wait;
         if(dialog.Length == 0) return;
         currentDialogue = dialog[0];        
     }
@@ -69,8 +71,19 @@ public class DialogueController : MonoBehaviour
         if (currentState == State.Dialog && currentDialogue.sentences.Length > sentenceIndex
             && textDisplay.text == currentDialogue.sentences[sentenceIndex])
         {
-            continueButton.SetActive(true);
-            //Debug.Log("DIALOG CONTOLLER: Continue active");
+            if (sentenceIndex >= currentDialogue.sentences.Length - 1 && currentDialogue.choices.Length > 0)
+            {
+                DisplayChoices();
+            }
+            else
+            {
+                continueButton.SetActive(true);
+            }
+        }
+
+        if(currentState == State.Notice && textDisplay.text == noticeMessage)
+        {
+            //continueButton.SetActive(true);
         }
         //Debug.Log("DIALOG INDEX " + dialogIndex);
 
@@ -129,6 +142,17 @@ public class DialogueController : MonoBehaviour
         }
     }
 
+    public void GiveResponse()
+    {
+        foreach(Dialog response in currentDialogue.responses)
+        {
+            response.isGiveOrSell = false;
+        }
+
+        DisplayResponse(0);
+ 
+    }
+
     /// <summary>
     /// Displays the response of a choice
     /// </summary>
@@ -139,6 +163,18 @@ public class DialogueController : MonoBehaviour
         {
             button.SetActive(false);                      //turn buttons off
         }
+
+        EventManager.TriggerEvent("Button" + responseChoice);
+
+        if (currentDialogue.responses.Length > responseChoice && currentDialogue.responses[responseChoice].isGiveOrSell)
+        {
+            currentState = State.Giving;
+            textDisplay.text = "";
+            StartCoroutine(Type("What do you not need?"));
+            EventManager.TriggerEvent("Giving");
+            return;
+        }
+  
         //Debug.Log("DIALOG CONTOLLER: State Response");
         currentState = State.Response;
         textDisplay.text = "";
@@ -146,11 +182,8 @@ public class DialogueController : MonoBehaviour
         //adds to the list of "clicked" choices if not seen before
         if (!repeatedTimes.Contains(responseChoice))
         {
-            //Debug.Log("DIALOG CONTOLLER: add to List : " + responseChoice);
             repeatedTimes.Add(responseChoice);
         }
-        EventManager.TriggerEvent("Button" + responseChoice);
-        //Debug.Log("Button" + responseChoice);
 
         responseNumber = responseChoice;
         responseIndex = 0;
@@ -171,22 +204,38 @@ public class DialogueController : MonoBehaviour
         }
     }
 
+    public void Notice(string notify)
+    {
+        oldState = currentState;
+        currentState = State.Notice;
+        noticeMessage = notify;
+        textDisplay.text = "";
+        StartCoroutine(Type(notify));
+    }
+
     /// <summary>
     /// This method starts the next sentence of the dialog
     /// </summary>
     public void NextSentence()
     {
+        if(currentState == State.Notice)
+        {
+            currentState = oldState;
+            NextSentence();
+        }
+        if(currentState == State.Giving)
+        {
+            textDisplay.text = "";
+            CheckWait();
+        }
+
         if(currentState == State.Dialog)
         {
             //Debug.Log("click");
             continueButton.SetActive(false);
-            //if is the last sentence, can go to choice mode
-            if (textDisplay.text == currentDialogue.sentences[sentenceIndex] && sentenceIndex == currentDialogue.sentences.Length - 1)
+            if (sentenceIndex >= currentDialogue.sentences.Length - 1)
             {
-                if(currentDialogue.choices.Length > 0){
-                    DisplayChoices();
-                }
-                else{
+                if(currentDialogue.choices.Length == 0){
                     CheckWait();
                 }
             }

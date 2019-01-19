@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Hero {
+public class Player : MonoBehaviour {
 
-	static private Player playerInstance = null;
+    [SerializeField] protected string heroName = "Hero";
+    [SerializeField] protected int health = 1;
+    [SerializeField] protected int attack = 1;
+    [SerializeField] protected int defense = 1;
+    [SerializeField] protected int dex = 1;
+    [SerializeField] protected int luck = 1;
+
+    static private Player playerInstance = null;
 	static private int numberInstance = 0;
 
 	public Dictionary<string, int> inventory = new Dictionary<string, int>();
@@ -65,9 +72,33 @@ public class Player : Hero {
         }
 		return false;
 	}
+    public int GetAmount(string itemName)
+    {
+        if (inventory == null) return 0;
+        int amount;
+        if (inventory.TryGetValue(itemName, out amount))
+        {
+            Debug.Log("Found " + itemName + " " + amount);
+            
+            return amount;
+        }
+        return 0;
+    }
 
 	public List<string> GetInventory(){
 		if(inventory == null) return null;
+        //return inventory;
 		return new List<string>(this.inventory.Keys);
 	}
+
+    public List<Hero> GetParty()
+    {
+        return party;
+    }
+
+    public void PartyJoin(Hero hero)
+    {
+        party.Add(hero);
+        Debug.Log(hero.GetName() + " joined you.");
+    }
 }
