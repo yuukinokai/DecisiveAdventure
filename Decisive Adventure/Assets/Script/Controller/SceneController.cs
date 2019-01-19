@@ -9,12 +9,12 @@ public class SceneController : MonoBehaviour {
 	enum GameState { Intro, Dialog, Move, EOD, Transition, Done, GameOver, Checkpoint, Giving, Selling};
 	[Range(0, .3f)] [SerializeField] private float MovementSmoothing = .05f; 
 	[SerializeField] private GameObject[] checkpoints;
-	[SerializeField] private DialogueController dialogController;
+	private DialogueController dialogController;
 	[SerializeField] private float moveSpeed = 5f;
 	[SerializeField] private Animator transitionAnim;
 	[SerializeField] private string sceneName;
 	[SerializeField] private string gameOverSceneName = "gameOver";
-	[SerializeField] private UIController uiController;
+	private UIController uiController;
 
 	private GameState gameState;
 	private int checkpointIndex = 0;
@@ -57,11 +57,12 @@ public class SceneController : MonoBehaviour {
 
 	void Start(){
 		dialogController = DialogueController.GetController();
-		gameState = GameState.Intro;
+        uiController = UIController.GetController();
+        gameState = GameState.Intro;
 		StartCoroutine(Intro());
 	}
 
-    void Awake ()
+    void Awake()
     {
 		player = GameObject.Find("Player");
 		if(player == null) return;
@@ -76,12 +77,6 @@ public class SceneController : MonoBehaviour {
 		EventManager.StartListening("DoneCheckpoint", DoneCheckpoint);
         EventManager.StartListening("Giving", Giving);
         EventManager.StartListening("DoneGiving", DoneGiving);
-        EventManager.StartListening("MonkeyJoin", NotifyMonkey);
-    }
-
-    private void NotifyMonkey()
-    {
-        dialogController.Notice("You gave the monkey your banana and Monkey joined you!");
     }
 
     private void DoneGiving()

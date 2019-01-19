@@ -12,6 +12,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject[] inventorySlot = new GameObject[20];
     [SerializeField] private GameObject inventoryScreen;
 
+    static private UIController thisInstance = null;
+
     private bool isActive = false;
     private bool isGiveActive = false;
     private BaseItem[] itemList;
@@ -20,6 +22,20 @@ public class UIController : MonoBehaviour
     private int partyIndex;
     private int inventoryIndex;
     private Player player;
+
+    static public UIController GetController()
+    {
+        if (thisInstance == null)
+        {
+            Debug.Log("Error : No instance of Controller.");
+        }
+        return thisInstance;
+    }
+
+    void Awake()
+    {
+        thisInstance = this;
+    }
 
     void Start(){
         itemList = ItemList.GetItemList().itemList;

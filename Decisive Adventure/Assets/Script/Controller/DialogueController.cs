@@ -38,7 +38,7 @@ public class DialogueController : MonoBehaviour
 
     static public DialogueController GetController(){
         if(thisInstance == null){
-          // Debug.Log("Error : No instance of Controller.");
+            Debug.Log("Error : No instance of Controller.");
         }
         return thisInstance;
     }

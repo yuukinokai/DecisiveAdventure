@@ -19,7 +19,7 @@ public class CheckMonkey : Checkpoint{
     void GiveBanana()
     {
         hero.PartyJoin((Monkey) Monkey.CreateInstance("Monkey"));
-        EventManager.TriggerEvent("MonkeyJoin");
+        dialogController.Notice("You gave the monkey your banana and Monkey joined you!");
         hero.RemoveItem("Banana");
     }
 
