@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IBaseCharacter {
 
     [SerializeField] protected string heroName = "Hero";
     [SerializeField] protected int health = 1;
@@ -101,4 +101,46 @@ public class Player : MonoBehaviour {
         party.Add(hero);
         Debug.Log(hero.GetName() + " joined you.");
     }
+
+    public string GetName()
+    {
+        return heroName;
+    }
+
+    public void AddLoyalty()
+    {
+        // stub
+    }
+
+    public int GetLoyalty()
+    {
+        return int.MaxValue;
+    }
+
+    public int GetHealth()
+    {
+        return health;
+    }
+
+    public int GetSkillChance()
+    {
+        // no skill anyways right?
+        return 0;
+    }
+
+    public int GetAttack()
+    {
+        return attack;
+    }
+
+    public int GetDefense()
+    {
+        return defense;
+    }
+
+    public List<ISkill> GetSkills()
+    {
+        return null;
+    }
+
 }

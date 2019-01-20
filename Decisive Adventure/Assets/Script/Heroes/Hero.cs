@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hero : ScriptableObject {
+public class Hero : ScriptableObject, IBaseCharacter {
 	[SerializeField] protected string heroName = "Hero";
 	[SerializeField] protected int health = 1;
 	[SerializeField] protected int attack = 1;
+    [SerializeField] protected int defense = 0;
     [SerializeField] protected int loyalty = 5;
     [SerializeField] protected int skillTrigger = 0;
 
@@ -38,6 +39,16 @@ public class Hero : ScriptableObject {
     {
         return attack;
     }
-    
+
+    public int GetDefense()
+    {
+        return defense;
+    }
+
+    public List<ISkill> GetSkills()
+    {
+        return null;
+    }
+
 
 }
