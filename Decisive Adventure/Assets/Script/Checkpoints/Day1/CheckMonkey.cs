@@ -4,12 +4,8 @@ using UnityEngine;
 
 public class CheckMonkey : Checkpoint{
 
-    /*override protected void Event0(){
-		if(isActive){
-            EventManager.TriggerEvent("Giving");
-            base.Event0();
-		}
-	} */
+    [SerializeField] private GameObject monkey;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -21,6 +17,7 @@ public class CheckMonkey : Checkpoint{
         hero.PartyJoin((Monkey) Monkey.CreateInstance("Monkey"));
         dialogController.Notice("You gave the monkey your banana and Monkey joined you!");
         hero.RemoveItem("Banana");
+        Destroy(monkey);
     }
 
     override protected void Event1(){
@@ -30,8 +27,8 @@ public class CheckMonkey : Checkpoint{
 				return;
 			}
 			hero.AddItem("Meat");
-        	//destroy the Monkey
-			base.Event1();
+            Destroy(monkey);
+            base.Event1();
 		}
 	} 
 
