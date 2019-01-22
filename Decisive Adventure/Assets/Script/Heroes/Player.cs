@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Player : Hero {
 
     /*[SerializeField] protected string heroName = "Hero";
     [SerializeField] protected int health = 1;
     [SerializeField] protected int attack = 1;
-    */
     [SerializeField] protected int defense = 1;
+        */
     [SerializeField] protected int dex = 1;
     [SerializeField] protected int luck = 1;
 
@@ -29,6 +30,7 @@ public class Player : Hero {
 		playerInstance = this;
 		numberInstance++;
         loyalty = 10;
+        defense = 1;
 	}
 
 	public bool AddItem(string itemName){
@@ -103,4 +105,5 @@ public class Player : Hero {
         party.Add(hero);
         Debug.Log(hero.GetName() + " joined you.");
     }
+
 }
