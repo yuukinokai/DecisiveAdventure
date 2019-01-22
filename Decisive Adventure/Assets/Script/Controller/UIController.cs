@@ -69,6 +69,7 @@ public class UIController : MonoBehaviour
     {
         ResetInventory();
         isGiveActive = false;
+        DisplayGive();
     }
 
     public void ResetInventory()
@@ -89,6 +90,7 @@ public class UIController : MonoBehaviour
 
     public void DisplayGive()
     {
+        Debug.Log("Display give");
         if (isGiveActive) return;
         if (player == null) return;
         if (inventoryScreen == null)
@@ -135,12 +137,13 @@ public class UIController : MonoBehaviour
 
     public void HideGive()
     {
+        if (!isGiveActive) return;
+        Debug.Log("Closing give");
         if (inventoryScreen == null)
         {
             Debug.Log(" UICONTROLLER : No inventory screen");
             return;
         }
-        EventManager.TriggerEvent("DoneGiving");
         inventoryScreen.SetActive(false);
         isGiveActive = false;
     }

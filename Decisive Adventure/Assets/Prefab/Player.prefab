@@ -135,6 +135,8 @@ MonoBehaviour:
   health: 1
   attack: 1
   defense: 1
+  loyalty: 10
+  skillTrigger: 0
   dex: 1
   luck: 1
   party: []

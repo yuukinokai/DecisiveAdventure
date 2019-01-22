@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Player : Hero {
 
     /*[SerializeField] protected string heroName = "Hero";
@@ -14,10 +13,9 @@ public class Player : Hero {
     [SerializeField] protected int luck = 1;
 
     static private Player playerInstance = null;
-	static private int numberInstance = 0;
 
-	public Dictionary<string, int> inventory = new Dictionary<string, int>();
-	public List<Hero> party;
+    [SerializeField] protected Dictionary<string, int> inventory = new Dictionary<string, int>();
+    [SerializeField] protected List<Hero> party;
 
 	static public Player GetPlayer(){
 		if(playerInstance == null){
@@ -26,14 +24,34 @@ public class Player : Hero {
 		return playerInstance;
 	}
 
-	void Awake(){
+    private void Start()
+    {
+        if (!party.Contains(this))
+        {
+            PartyJoin(this);
+        }
+    }
+
+    void Awake(){
 		playerInstance = this;
-		numberInstance++;
-        loyalty = 10;
-        defense = 1;
 	}
 
-	public bool AddItem(string itemName){
+    public int GetDex()
+    {
+        return dex;
+    }
+
+    public int GetLuck()
+    {
+        return luck;
+    }
+
+    public Dictionary<string, int> GetFullInventory()
+    {
+        return inventory;
+    }
+
+    public bool AddItem(string itemName){
 		if(inventory == null) return false;
 		int amount;
 		Debug.Log("AddItem : " +  itemName);
@@ -104,6 +122,78 @@ public class Player : Hero {
     {
         party.Add(hero);
         Debug.Log(hero.GetName() + " joined you.");
+    }
+
+    public Dictionary<string, int> GetPersistentParty()
+    {
+        Dictionary<string, int> persistentParty = new Dictionary<string, int>();
+
+        foreach(Hero h in party)
+        {
+            persistentParty.Add(h.GetName(), h.GetLoyalty());
+        }
+
+        return persistentParty;
+    }
+
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystem.LoadPlayer();
+        if (data == null) return;
+        health = data.health;
+        heroName = data.heroName;
+        attack = data.attack;
+        defense = data.defense;
+        dex = data.dex;
+        luck = data.luck;
+        inventory = data.inventory;
+        
+        int index = 0;
+        if(data.party.Count == 0)
+        {
+            return;
+        }
+        foreach(string hero in data.party.Keys)
+        {
+            Hero ally;
+            if(string.Compare(hero, "Monkey") == 0)
+            {
+                ally = GameObject.FindGameObjectsWithTag(hero)[0].GetComponent<Monkey>();
+            }
+            else if (string.Compare(hero, "Dog") == 0)
+            {
+                ally = GameObject.FindGameObjectsWithTag(hero)[0].GetComponent<Dog>();
+            }
+            else if (string.Compare(hero, "Fairy") == 0)
+            {
+                ally = GameObject.FindGameObjectsWithTag(hero)[0].GetComponent<Fairy>();
+            }
+            else if (string.Compare(hero, "BigDemon") == 0)
+            {
+                ally = GameObject.FindGameObjectsWithTag(hero)[0].GetComponent<BigDemon>();
+            }
+            else if (string.Compare(hero, "SmallDemon") == 0)
+            {
+                ally = GameObject.FindGameObjectsWithTag(hero)[0].GetComponent<SmallDemon>();
+            }
+            else
+            {
+                ally = null;
+                Debug.Log("Saved an unknown hero");
+                index++;
+                continue;
+            }
+
+            int loyalty = 5;
+            if (data.party.TryGetValue(hero, out loyalty))
+            {
+                Debug.Log("Found " + hero + " " + loyalty);
+            }
+            ally.SetLoyalty(loyalty);
+            PartyJoin(ally);
+
+            index++;
+        }
     }
 
 }

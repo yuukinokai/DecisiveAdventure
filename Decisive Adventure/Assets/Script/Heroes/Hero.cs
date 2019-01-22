@@ -26,9 +26,19 @@ public class Hero : MonoBehaviour
         return loyalty;
     }
 
+    public void SetLoyalty(int newLoyalty)
+    {
+        loyalty = newLoyalty;
+    }
+
     public int GetHealth()
     {
         return health;
+    }
+
+    public void SetHealth(int newHealth)
+    {
+        health = newHealth;
     }
 
     public int GetSkillChance()
@@ -36,9 +46,19 @@ public class Hero : MonoBehaviour
         return skillTrigger;
     }
 
+    public void SetSkillChance(int newSkillChance)
+    {
+        skillTrigger = newSkillChance;
+    }
+
     public int GetAttack()
     {
         return attack;
+    }
+
+    public void SetAttack(int newAttack)
+    {
+        attack = newAttack;
     }
 
     public int GetDefense()
@@ -46,10 +66,14 @@ public class Hero : MonoBehaviour
         return defense;
     }
 
+    public void SetDefense(int newDefense)
+    {
+        defense = newDefense;
+    }
+
     public List<ISkill> GetSkills()
     {
         return null;
     }
-
 
 }

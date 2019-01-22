@@ -83,7 +83,7 @@ public class DialogueController : MonoBehaviour
 
         if(currentState == State.Notice && textDisplay.text == noticeMessage)
         {
-            //continueButton.SetActive(true);
+            continueButton.SetActive(true);
         }
         //Debug.Log("DIALOG INDEX " + dialogIndex);
 
@@ -140,17 +140,6 @@ public class DialogueController : MonoBehaviour
             choiceButtons[buttonIndex].SetActive(true);
             choiceDisplay[buttonIndex++].text = choice;
         }
-    }
-
-    public void GiveResponse()
-    {
-        foreach(Dialog response in currentDialogue.responses)
-        {
-            response.isGiveOrSell = false;
-        }
-
-        DisplayResponse(0);
- 
     }
 
     /// <summary>
@@ -221,9 +210,11 @@ public class DialogueController : MonoBehaviour
         if(currentState == State.Notice)
         {
             currentState = oldState;
+            EventManager.TriggerEvent("DoneNotice");
             NextSentence();
         }
-        if(currentState == State.Giving)
+
+        if (currentState == State.Giving)
         {
             textDisplay.text = "";
             CheckWait();

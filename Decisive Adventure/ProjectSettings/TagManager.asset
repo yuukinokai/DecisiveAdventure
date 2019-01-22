@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - ItemList
+  - Monkey
+  - Dog
+  - BigDemon
+  - SmallDemon
+  - Fairy
   layers:
   - Default
   - TransparentFX

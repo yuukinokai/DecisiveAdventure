@@ -9,12 +9,22 @@ public class Checkpoint : MonoBehaviour {
 	protected Vector3 _Velocity = Vector3.zero;
 	protected DialogueController dialogController;
 	protected Player hero;
+    protected UIController uiController;
 
 	[SerializeField] protected Dialog _Dialog;
 	[SerializeField] protected bool isActive = false;
 	[SerializeField] protected bool overriden = false;
 
-   	virtual protected void OnTriggerEnter2D(Collider2D other)
+    private void Awake()
+    {
+        uiController = UIController.GetController();
+        if(uiController == null)
+        {
+            Debug.LogError("UIController not set");
+        }
+    }
+
+    virtual protected void OnTriggerEnter2D(Collider2D other)
     {
       	if (other.gameObject.CompareTag("Player")) {
 			isActive = true;

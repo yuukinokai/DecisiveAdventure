@@ -37,7 +37,7 @@ public class SceneController : MonoBehaviour {
 	}
 
 	IEnumerator Intro()
-	{
+	{   
 		yield return new WaitForSeconds(2f);
 		if(checkpoints.Length > 0){
 			gameState = GameState.Move;
@@ -48,25 +48,29 @@ public class SceneController : MonoBehaviour {
 		}
 	}
 
-	IEnumerator Transit()
-	{
-		transitionAnim.SetTrigger("Transition");
-		yield return new WaitForSeconds(1f);
-		SceneManager.LoadScene(sceneName);
-	}
-
 	void Start(){
 		dialogController = DialogueController.GetController();
         uiController = UIController.GetController();
         gameState = GameState.Intro;
-		StartCoroutine(Intro());
-	}
+        player = GameObject.Find("Player");
+        if (player == null) return;
+        rigidBody2D = player.GetComponent<Rigidbody2D>();
+        Player playerData = player.GetComponent<Player>();
+        if (playerData != null && string.Compare(SceneManager.GetActiveScene().name, "scene1") != 0)
+        {
+            playerData.LoadPlayer();
+        }
+        else
+        {
+            Debug.Log("ERROR : No playerdata found");
+        }
+        StartCoroutine(Intro());
+
+    }
 
     void Awake()
     {
-		player = GameObject.Find("Player");
-		if(player == null) return;
-		rigidBody2D = player.GetComponent<Rigidbody2D>();
+		
     }
 	
     void OnEnable ()
@@ -77,6 +81,7 @@ public class SceneController : MonoBehaviour {
 		EventManager.StartListening("DoneCheckpoint", DoneCheckpoint);
         EventManager.StartListening("Giving", Giving);
         EventManager.StartListening("DoneGiving", DoneGiving);
+        EventManager.StartListening("DoneNotice", DoneGiving);
     }
 
     private void DoneGiving()
@@ -131,11 +136,16 @@ public class SceneController : MonoBehaviour {
 	}
 
 	void Update(){
+        if(gameState != GameState.Giving)
+        {
+            uiController.HideGive();
+        }
 		if(gameState == GameState.Transition){
 			Debug.Log("Transition here.");
 			gameState = GameState.Done;
-			StartCoroutine(Transit());
-		}
+            transitionAnim.SetTrigger("Transition");
+            SceneManager.LoadScene(sceneName);
+        }
 		if(gameState == GameState.Move){
 			//Debug.Log("Add Speed here.");
 			
@@ -150,14 +160,24 @@ public class SceneController : MonoBehaviour {
 
 		if(gameState == GameState.EOD){
 			Debug.Log("Calling EOD");
-			uiController.DisplayInventory();
-		}
+            Player playerData = player.GetComponent<Player>();
+            if (playerData != null)
+            {
+                SaveSystem.SavePlayer(playerData, sceneName);
+            }
+            else
+            {
+                Debug.Log("ERROR : No playerdata found");
+            }
+            uiController.DisplayInventory();
+        }
 		else{
 			uiController.HideInventory();
 		}
 	}
 
 	public void EndDay(){
+        uiController.HideInventory();
 		gameState = GameState.Transition;
 	}
 }
