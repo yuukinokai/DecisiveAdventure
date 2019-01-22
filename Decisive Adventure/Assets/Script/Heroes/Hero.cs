@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hero : ScriptableObject {
+public class Hero : MonoBehaviour
+{
 	[SerializeField] protected string heroName = "Hero";
 	[SerializeField] protected int health = 1;
 	[SerializeField] protected int attack = 1;

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : Hero {
 
-    [SerializeField] protected string heroName = "Hero";
+    /*[SerializeField] protected string heroName = "Hero";
     [SerializeField] protected int health = 1;
     [SerializeField] protected int attack = 1;
+    */
     [SerializeField] protected int defense = 1;
     [SerializeField] protected int dex = 1;
     [SerializeField] protected int luck = 1;
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour {
 	void Awake(){
 		playerInstance = this;
 		numberInstance++;
+        loyalty = 10;
 	}
 
 	public bool AddItem(string itemName){

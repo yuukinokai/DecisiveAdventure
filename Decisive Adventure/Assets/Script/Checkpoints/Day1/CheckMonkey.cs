@@ -14,7 +14,13 @@ public class CheckMonkey : Checkpoint{
 
     void GiveBanana()
     {
-        hero.PartyJoin((Monkey) Monkey.CreateInstance("Monkey"));
+        Monkey monkeyHero = monkey.GetComponent<Monkey>();
+        if(monkeyHero == null)
+        {
+            Debug.Log("Error, monkey not found");
+            return;
+        }
+        hero.PartyJoin(monkeyHero);
         dialogController.Notice("You gave the monkey your banana and Monkey joined you!");
         hero.RemoveItem("Banana");
         Destroy(monkey);
