@@ -893,6 +893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f225f9712c8b7a0469b0d98866e61b1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioObject: {fileID: 0}
   MovementSmoothing: 0.05
   checkpoints:
   - {fileID: 717115584}
@@ -1167,7 +1168,7 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1873916231}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &305609423
@@ -4444,7 +4445,7 @@ Transform:
 --- !u!199 &1641387016
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 2
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -9368,6 +9369,12 @@ MonoBehaviour:
   repeat: 0
   startRightAway: 0
   isGiveOrSell: 0
+--- !u!1 &1873916231 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4132776823918908782, guid: 9292099d1092b634387b98f429336cbb,
+    type: 3}
+  m_PrefabInstance: {fileID: 790181478733881125}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1919996841
 GameObject:
   m_ObjectHideFlags: 0

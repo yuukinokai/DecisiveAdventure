@@ -151,8 +151,9 @@ public class SceneController : MonoBehaviour {
 	}
 
 	void DoneDialog(){
-		if(gameState != GameState.Dialog){
-			Debug.Log("ERROR: GameState was not Dialog");
+		if(gameState != GameState.Dialog && gameState != GameState.Giving)
+        {
+			Debug.Log("ERROR: GameState was not Dialog or Giving");
 			return;
 		}
 		//Debug.Log ("Dialog is done");

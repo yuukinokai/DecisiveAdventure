@@ -11,6 +11,7 @@ public class Player : Hero {
         */
     [SerializeField] protected int dex = 1;
     [SerializeField] protected int luck = 1;
+    [SerializeField] protected int coin = 0;
 
     static private Player playerInstance = null;
 
@@ -124,6 +125,20 @@ public class Player : Hero {
         Debug.Log(hero.GetName() + " joined you.");
     }
 
+    public void AddCoin(int i)
+    {
+        coin += i;
+    }
+    public void LoseCoin(int i)
+    {
+        coin -= i;
+        coin = Mathf.Max(coin, 0);
+    }
+    public int GetCoin()
+    {
+        return coin;
+    }
+
     public Dictionary<string, int> GetPersistentParty()
     {
         Dictionary<string, int> persistentParty = new Dictionary<string, int>();
@@ -147,6 +162,7 @@ public class Player : Hero {
         dex = data.dex;
         luck = data.luck;
         inventory = data.inventory;
+        coin = data.coin;
         
         int index = 0;
         if(data.party.Count == 0)
