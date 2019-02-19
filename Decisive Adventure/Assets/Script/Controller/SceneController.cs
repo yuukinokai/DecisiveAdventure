@@ -6,6 +6,8 @@ using System;
 
 public class SceneController : MonoBehaviour {
 
+    public GameObject audioObject;
+
 	enum GameState { Intro, Dialog, Move, EOD, Transition, Done, GameOver, Checkpoint, Giving, Selling};
 	[Range(0, .3f)] [SerializeField] private float MovementSmoothing = .05f; 
 	[SerializeField] private GameObject[] checkpoints;
@@ -21,8 +23,10 @@ public class SceneController : MonoBehaviour {
 	private GameObject player;
 	private Rigidbody2D rigidBody2D;
 	private Vector3 _Velocity = Vector3.zero;
+    private Boolean audioSet = false;
 
-	IEnumerator GOver()
+
+    IEnumerator GOver()
 	{
 		yield return new WaitForSeconds(5f);
 		transitionAnim.SetTrigger("GameOver");
@@ -44,11 +48,32 @@ public class SceneController : MonoBehaviour {
 		}
 		else{
 			gameState = GameState.Dialog;
+            Debug.Log("Started with dialog");
 			dialogController.NextDialog();
 		}
-	}
+        if (audioObject != null)
+        {
+            AudioSource audioData = audioObject.GetComponent<AudioSource>();
+            audioData.Play(0);
+            Debug.Log("audio started");
+            audioSet = true;
+        }
+    }
 
-	void Start(){
+    void FadeIn()
+    {
+        if (audioObject != null)
+        {
+            AudioSource audioData = audioObject.GetComponent<AudioSource>();
+            if (audioData.volume < 1)
+            {
+                audioData.volume += 1 * Time.deltaTime;
+                print(audioData.volume + "goingin");
+            }
+        }       
+    }
+
+    void Start(){
 		dialogController = DialogueController.GetController();
         uiController = UIController.GetController();
         gameState = GameState.Intro;
@@ -56,16 +81,20 @@ public class SceneController : MonoBehaviour {
         if (player == null) return;
         rigidBody2D = player.GetComponent<Rigidbody2D>();
         Player playerData = player.GetComponent<Player>();
-        if (playerData != null && string.Compare(SceneManager.GetActiveScene().name, "scene1") != 0)
+        if (playerData != null )
         {
-            playerData.LoadPlayer();
+            if(string.Compare(SceneManager.GetActiveScene().name, "scene1") != 0 && string.Compare(SceneManager.GetActiveScene().name, "introduction") != 0)
+            {
+                playerData.LoadPlayer();
+                Debug.Log("PlayerDataLoaded");
+            }
+            
         }
         else
         {
             Debug.Log("ERROR : No playerdata found");
         }
         StartCoroutine(Intro());
-
     }
 
     void Awake()
@@ -136,7 +165,16 @@ public class SceneController : MonoBehaviour {
 	}
 
 	void Update(){
-        if(gameState != GameState.Giving)
+        if (audioSet && audioObject != null)
+        {
+            AudioSource audioData = audioObject.GetComponent<AudioSource>();
+            if (audioData.volume <= 1)
+            {
+                FadeIn();
+            }
+        }
+        
+        if (gameState != GameState.Giving)
         {
             uiController.HideGive();
         }
