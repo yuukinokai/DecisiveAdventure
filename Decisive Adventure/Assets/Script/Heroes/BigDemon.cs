@@ -9,6 +9,5 @@ public class BigDemon : Hero
         heroName = "BigDemon";
         health = 3;
         attack = 3;
-        skillTrigger = 10;
     }
 }

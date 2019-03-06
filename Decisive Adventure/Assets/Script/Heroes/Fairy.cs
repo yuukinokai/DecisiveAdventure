@@ -9,6 +9,5 @@ public class Fairy : Hero
         heroName = "Fairy";
         health = 1;
         attack = 0;
-        skillTrigger = 10;
     }
 }

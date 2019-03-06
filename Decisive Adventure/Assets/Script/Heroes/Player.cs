@@ -8,9 +8,9 @@ public class Player : Hero {
     [SerializeField] protected int health = 1;
     [SerializeField] protected int attack = 1;
     [SerializeField] protected int defense = 1;
-        */
     [SerializeField] protected int dex = 1;
     [SerializeField] protected int luck = 1;
+    */
 
     static private Player playerInstance = null;
 
@@ -35,16 +35,6 @@ public class Player : Hero {
     void Awake(){
 		playerInstance = this;
 	}
-
-    public int GetDex()
-    {
-        return dex;
-    }
-
-    public int GetLuck()
-    {
-        return luck;
-    }
 
     public Dictionary<string, int> GetFullInventory()
     {

@@ -9,6 +9,5 @@ public class Dog : Hero
         heroName = "Dog";
         health = 2;
         attack = 0;
-        skillTrigger = 10;
     }
 }

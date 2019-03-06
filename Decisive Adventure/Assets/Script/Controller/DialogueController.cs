@@ -267,9 +267,15 @@ public class DialogueController : MonoBehaviour
         }
     }
 
+
     public void OverrideDialog(Dialog d){
         dialog[dialogIndex] = d;
         Debug.Log("DIALOG CONTROLLER : Replaced Dialog");
+    }
+
+    public void ClearDialog()
+    {
+        textDisplay.text = "";
     }
 
 }

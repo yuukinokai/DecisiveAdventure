@@ -9,7 +9,9 @@ public class Hero : MonoBehaviour
 	[SerializeField] protected int attack = 1;
     [SerializeField] protected int defense = 0;
     [SerializeField] protected int loyalty = 5;
-    [SerializeField] protected int skillTrigger = 0;
+    [SerializeField] protected int luck = 0;
+    [SerializeField] protected int dex = 0;
+    [SerializeField] protected List<BaseSkill> skillList = new List<BaseSkill>();
 
     public string GetName()
     {
@@ -41,14 +43,14 @@ public class Hero : MonoBehaviour
         health = newHealth;
     }
 
-    public int GetSkillChance()
+    public int GetLuck()
     {
-        return skillTrigger;
+        return luck;
     }
 
-    public void SetSkillChance(int newSkillChance)
+    public void SetLuck(int newLuck)
     {
-        skillTrigger = newSkillChance;
+        luck = newLuck;
     }
 
     public int GetAttack()
@@ -71,9 +73,29 @@ public class Hero : MonoBehaviour
         defense = newDefense;
     }
 
-    public List<ISkill> GetSkills()
+    public int GetDex()
     {
-        return null;
+        return dex;
+    }
+
+    public void SetDex(int newDex)
+    {
+        dex = newDex;
+    }
+
+    public List<BaseSkill> GetSkills()
+    {
+        return skillList;
+    }
+
+    public void AddSkill(BaseSkill skill)
+    {
+        this.skillList.Add(skill);
+    }
+
+    public void RemoveSkill(BaseSkill skill)
+    {
+        this.skillList.Remove(skill);
     }
 
 }

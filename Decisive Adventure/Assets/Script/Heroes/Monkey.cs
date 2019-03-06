@@ -9,6 +9,11 @@ public class Monkey : Hero
         heroName = "Monkey";
         health = 3;
         attack = 0;
-        skillTrigger = 1;
+        luck = 0;   
+
+        // add skill to character
+        BaseSkill monkeyOneShot = new MonkeyOneShot();
+        monkeyOneShot.SetCharacter(this);
+        this.AddSkill(monkeyOneShot);
     }
 }

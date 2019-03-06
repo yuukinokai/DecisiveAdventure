@@ -6,94 +6,131 @@ using System.Collections.Generic;
 
 public class BattleController : MonoBehaviour
 {
-
-    public enum BattleStage {PreAttack, Attack, DamageCalc, PostAttack, End };
+    public enum State { Idle, Battle1, Battle2, End }
+    public enum BattleStage { PreAttack, Attack, DamageCalc, PostAttack, End };
     public enum BattleTurn { Ally, Opponent };
 
-    private IBaseCharacter ally;
-    private IBaseCharacter enemy;
 
-    private IBaseCharacter attacker;
-    private IBaseCharacter defender;
+    public List<BaseSkill> SkillsList = new List<BaseSkill>();
 
-    public List<ISkill> SkillsList;
-
-
-    private List<IBaseCharacter> party;
-    private BattleTurn CurrentTurn;
+    private DialogueController dialogueController;
+    private List<Hero> party;
+    private BattleTurn currentTurn;
+    private State currentState;
     private bool battleActive;
 
-    public BattleController(List<IBaseCharacter> party, IBaseCharacter enemy)
+    private Hero ally;
+    private Hero enemy;
+
+    public void Start() // (List<Hero> party, Hero enemy )
     {
-        this.party = party;
+        this.dialogueController = DialogueController.GetController();
 
-        // determine the ally
-
-        this.ally = party[0];
-        this.enemy = enemy;
+        //this.party = party;
+        //this.enemy = enemy;
 
         // create new list with enemy inside to avoid special case at the end
-        List<IBaseCharacter> all = new List<IBaseCharacter>(party);
+        List<Hero> all = new List<Hero>();
+        all.AddRange(party);
         all.Add(enemy);
 
         // add all the skills of all the characters inside their respective lists
-        foreach (IBaseCharacter character in all)
+        foreach (Hero character in all)
         {
-            List < ISkill > skills = character.GetSkills();
-            foreach(ISkill skill in skills)
+            List <BaseSkill> skills = character.GetSkills();
+            foreach(BaseSkill skill in skills)
             {
-                if ((skill.FighterRequired() && character == ally) || (!skill.FighterRequired()))
-                {
-                    SkillsList.Add(skill);
-                }
+                SkillsList.Add(skill);
             }
         }
 
         this.battleActive = true;
-
+        this.currentState = State.Idle;
     }
 
-    public IBaseCharacter GetAttacker()
+    public void SelectCharacter(Hero ally, BattleTurn starting = BattleTurn.Ally)
     {
-        return CurrentTurn == BattleTurn.Ally ? ally : enemy;
+        this.ally = ally;
+        this.currentTurn = starting;
+        dialogueController.ClearDialog();
+
+        this.currentState = State.Battle1;
     }
 
-    public IBaseCharacter GetDefender()
+    public Hero GetAttacker()
     {
-        return CurrentTurn == BattleTurn.Ally ? ally : enemy;
+        return currentTurn == BattleTurn.Ally ? ally : enemy;
+    }
+
+    public Hero GetDefender()
+    {
+        return currentTurn == BattleTurn.Ally ? ally : enemy;
     }
 
     private void DoPreAttack()
     {
-        SkillsList.ForEach(skill => skill.TriggerPreAttack(attacker, defender));
+        SkillsList.ForEach(skill => {
+            bool remove = skill.TriggerPreAttack(GetAttacker(), GetDefender());
+            if (remove)
+            {
+                SkillsList.Remove(skill);
+            }
+        });
     }
 
     private void DoAttack()
     {
-        SkillsList.ForEach(skill => skill.TriggerAttack(attacker, defender));
+        bool skipAttack = false;
+        SkillsList.ForEach(skill => {
+            bool remove = skill.TriggerAttack(GetAttacker(), GetDefender(), ref skipAttack);
+            if (remove)
+            {
+                SkillsList.Remove(skill);
+            }
+        });
+        if (!skipAttack)
+        {
+
+        }
         // attackanimation()
     }
 
     private void DoDamageCalc()
     {
         int damage = ComputeNetDamage();
-        SkillsList.ForEach(skill => skill.TriggerDamageCalc(attacker, defender, ref damage));
+        SkillsList.ForEach(skill => {
+            bool remove = skill.TriggerDamageCalc(GetAttacker(), GetDefender(), ref damage);
+            if (remove)
+            {
+                SkillsList.Remove(skill);
+            }
+        });
         //actually take damage()
     }
 
     private void DoPostAttack()
     {
-        SkillsList.ForEach(skill => skill.TriggerPostAttack(attacker, defender));
+        SkillsList.ForEach(skill => {
+            bool remove = skill.TriggerPostAttack(GetAttacker(), GetDefender());
+            if (remove)
+            {
+                SkillsList.Remove(skill);
+            }
+        });
 
     }
 
     private void DoEnd()
     {
-        SkillsList.ForEach(skill => skill.TriggerEnd(attacker, defender));
-        CurrentTurn = (CurrentTurn == BattleTurn.Ally) ? BattleTurn.Opponent : BattleTurn.Ally;
-        IBaseCharacter temp = attacker;
-        attacker = defender;
-        defender = temp;
+        SkillsList.ForEach(skill => {
+            bool remove = skill.TriggerEnd(GetAttacker(), GetDefender());
+            if (remove)
+            {
+                SkillsList.Remove(skill);
+            }
+        });
+
+        currentTurn = (currentTurn == BattleTurn.Ally) ? BattleTurn.Opponent : BattleTurn.Ally;
 
         //check if anyone died
         if (ally.GetHealth() == 0 || enemy.GetHealth() == 0)
@@ -105,24 +142,40 @@ public class BattleController : MonoBehaviour
 
     public void Battle()
     {
-        while(battleActive)
+
+        DoPreAttack();
+        DoAttack();
+        DoDamageCalc();
+        DoPostAttack();
+        DoEnd();
+
+        if (battleActive)
         {
-            DoPreAttack();
-            DoAttack();
-            DoDamageCalc();
-            DoPostAttack();
-            DoEnd();
+            if (currentState == State.Battle1)
+            {
+                currentState = State.Battle2;
+            } else if (currentState == State.Battle2)
+            {
+                currentState = State.Idle;
+            }
+            else
+            {
+                // euhh not supposed to be thereee
+            }
+        }
+        else
+        {
+            // end battle scene
         }
 
     }
 
     private int ComputeNetDamage()
     {
-        int attack = attacker.GetAttack();
-        int defense = defender.GetDefense();
+        int attack = GetAttacker().GetAttack();
+        int defense = GetDefender().GetDefense();
         return attack - Mathf.Max(defense - 5, 0);
     }
-
 
 }
 
