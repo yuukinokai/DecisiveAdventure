@@ -7,6 +7,7 @@ using System.Collections.Generic;
 public class BattleController : MonoBehaviour
 {
     public enum State { Idle, Battle1, Battle2, End }
+
     public enum BattleStage { PreAttack, Attack, DamageCalc, PostAttack, End };
     public enum BattleTurn { Ally, Opponent };
 
@@ -21,6 +22,16 @@ public class BattleController : MonoBehaviour
 
     private Hero ally;
     private Hero enemy;
+
+
+    // @TODO: create ui element to choose the attacker
+    // @TODO: integrate battle dialog controller with this
+
+    public BattleController(List<Hero> party, Hero enemy)
+    {
+        this.party = party;
+    }
+
 
     public void Start() // (List<Hero> party, Hero enemy )
     {
@@ -176,6 +187,7 @@ public class BattleController : MonoBehaviour
         int defense = GetDefender().GetDefense();
         return attack - Mathf.Max(defense - 5, 0);
     }
+
 
 }
 

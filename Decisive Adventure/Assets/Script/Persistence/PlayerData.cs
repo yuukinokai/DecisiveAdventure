@@ -16,6 +16,7 @@ public class PlayerData
     public int defense;
     public int dex;
     public int luck;
+    public int coin;
 
     public Dictionary<string, int> inventory = new Dictionary<string, int>();
     public Dictionary<string, int> party = new Dictionary<string, int>();
@@ -29,6 +30,7 @@ public class PlayerData
         defense = player.GetDefense();
         dex = player.GetDex();
         luck = player.GetLuck();
+        coin = player.GetCoin();
 
         inventory = player.GetFullInventory();
 
