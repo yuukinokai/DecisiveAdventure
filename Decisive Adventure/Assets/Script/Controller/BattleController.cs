@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class BattleController : MonoBehaviour
 {
 
-    public enum BattleStage {PreAttack, Attack, DamageCalc, PostAttack, End };
+    public enum BattleStage { PreAttack, Attack, DamageCalc, PostAttack, End };
     public enum BattleTurn { Ally, Opponent };
 
     private IBaseCharacter ally;
@@ -22,6 +22,10 @@ public class BattleController : MonoBehaviour
     private List<IBaseCharacter> party;
     private BattleTurn CurrentTurn;
     private bool battleActive;
+
+
+    // @TODO: create ui element to choose the attacker
+    // @TODO: integrate battle dialog controller with this
 
     public BattleController(List<IBaseCharacter> party, IBaseCharacter enemy)
     {
@@ -39,8 +43,8 @@ public class BattleController : MonoBehaviour
         // add all the skills of all the characters inside their respective lists
         foreach (IBaseCharacter character in all)
         {
-            List < ISkill > skills = character.GetSkills();
-            foreach(ISkill skill in skills)
+            List<ISkill> skills = character.GetSkills();
+            foreach (ISkill skill in skills)
             {
                 if ((skill.FighterRequired() && character == ally) || (!skill.FighterRequired()))
                 {
@@ -84,7 +88,6 @@ public class BattleController : MonoBehaviour
     private void DoPostAttack()
     {
         SkillsList.ForEach(skill => skill.TriggerPostAttack(attacker, defender));
-
     }
 
     private void DoEnd()
@@ -105,7 +108,7 @@ public class BattleController : MonoBehaviour
 
     public void Battle()
     {
-        while(battleActive)
+        while (battleActive)
         {
             DoPreAttack();
             DoAttack();
@@ -122,7 +125,5 @@ public class BattleController : MonoBehaviour
         int defense = defender.GetDefense();
         return attack - Mathf.Max(defense - 5, 0);
     }
-
-
 }
 
