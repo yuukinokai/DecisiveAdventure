@@ -10,7 +10,7 @@ public class DialogueController : MonoBehaviour
     static private DialogueController thisInstance = null;
     static private int instanceNumber = 0;
 
-    [SerializeField] private Text textDisplay;                  //main display for dialog text
+    [SerializeField] private TMPro.TextMeshProUGUI textDisplay;                  //main display for dialog text
     [SerializeField] private Dialog[] dialog;                   //array of all the dialogs   
     [SerializeField] private GameObject continueButton;         //click area to continue text
     [SerializeField] private Text[] choiceDisplay;              //array of text display for choices

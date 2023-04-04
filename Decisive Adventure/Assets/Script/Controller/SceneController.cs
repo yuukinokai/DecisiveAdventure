@@ -65,7 +65,7 @@ public class SceneController : MonoBehaviour {
         if (audioObject != null)
         {
             AudioSource audioData = audioObject.GetComponent<AudioSource>();
-            if (audioData.volume < 1)
+            if (audioData.volume < 0.5)
             {
                 audioData.volume += 1 * Time.deltaTime;
                 print(audioData.volume + "goingin");
